@@ -1,9 +1,41 @@
 from airflow.contrib.hooks.snowflake_hook import SnowflakeHook
 from contextlib import closing
-SNOWFLAKE_CONN_ID = 'snowflake_connection'
+from airflow.models import Connection
+from airflow import settings
+import logging
+from airflow.models import Variable
+
+SNOWFLAKE_CONN_ID = Variable.get('v_snowflake_connection')
+SNOWFLAKE_CONN_TYPE = Variable.get('v_connection_type')
+SNOWFLAKE_HOST = Variable.get('v_snowflake_host')
+SNOWFLAKE_LOGIN = Variable.get('v_snowflake_login')
+SNOWFLAKE_PWD = Variable.get('v_snowflake_password')
+SNOWFLAKE_SCHEMA = Variable.get('v_admin_schema')
+SNOWFLAKE_EXTRA = Variable.get('v_snowflake_extra')
+
+
+def create_airflow_connection():
+    conn = Connection(
+        conn_id=SNOWFLAKE_CONN_ID,
+        conn_type=SNOWFLAKE_CONN_TYPE,
+        host=SNOWFLAKE_HOST,
+        login=SNOWFLAKE_LOGIN,
+        password=SNOWFLAKE_PWD,
+        schema=SNOWFLAKE_SCHEMA,
+        extra=SNOWFLAKE_EXTRA
+    )
+    session = settings.Session()
+    conn_name = session.query(Connection).filter(Connection.conn_id == conn.conn_id).first()
+
+    if str(conn_name) == str(SNOWFLAKE_CONN_ID):
+        return logging.info(f"Connection {SNOWFLAKE_CONN_ID} already exists")
+
+    session.add(conn)
+    session.commit()
+    logging.info(Connection.log_info(conn))
+    logging.info(f'Connection {SNOWFLAKE_CONN_ID} is created')
 
 def execute_snowflake_fetchall(query,with_cursor=False):
-    """Execute snowflake query."""
     hook_connection = SnowflakeHook(
         snowflake_conn_id=SNOWFLAKE_CONN_ID
     )
@@ -18,7 +50,7 @@ def execute_snowflake_fetchall(query,with_cursor=False):
                 return result
 
 def execute_snowflake_fetchone(query,with_cursor=False):
-    """Execute snowflake query."""
+
     hook_connection = SnowflakeHook(
         snowflake_conn_id=SNOWFLAKE_CONN_ID
     )

@@ -1,0 +1,24 @@
+{
+	"v_snowflake_connection": "snowflake_connection",
+	"v_connection_type": "snowflake",
+	"v_snowflake_host":"cdmdev1.east-us-2.azure.snowflakecomputing.com",
+	"v_snowflake_login":"",
+	"v_snowflake_password":"",
+	"v_admin_database":"CDP_ADMIN_5_0",
+	"v_admin_schema":"CTRL",
+	"v_snowflake_extra": {
+        "extra__snowflake__account": "cdmdev1",
+        "extra__snowflake__database": "CDP_ADMIN_5_0",
+        "extra__snowflake__region": "east-us-2.azure",
+        "extra__snowflake__role": "HXP_DATA_CONSUMER",
+        "extra__snowflake__warehouse": "COMPUTE_WH"
+    },
+    "v_batch_ingestion_stage": " ",
+    "v_batch_ingestion_stage_file_path": " ",
+    "v_feed_id": 5,
+    "v_field_seperator": ",",
+    "v_file_ext": "CSV",
+    "v_file_format": " ",
+    "v_flat_file_header_format": "FLAT_FILE_HEADER_FORMAT",
+    "v_pipeline": "PII"
+}

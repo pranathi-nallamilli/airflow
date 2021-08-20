@@ -9,28 +9,21 @@ from csv import reader
 import pandas as pd
 
 
-def snowflake_data_operation(**kwargs): 
+def mapping_validation_initiate_operation(**kwargs): 
 
-    map_result = snowflake_db.execute_snowflake_fetchall(config_data.map_query1)
-    if len(map_result)==0:
-                print('Feed specifc field mapping configuration not found for feed id: '+ Variable.get('v_feed_id'))
-                map_result = snowflake_db.execute_snowflake_fetchall(config_data.map_query2)
-
+    map_result = snowflake_db.execute_snowflake_fetchall(config_data.map_query)
+    
     cols = processMappingAndUpdateSchema(map_result)
     processRequiredFields(cols)
 
 def processRequiredFields(cols):
     # executing query
     try:
-        req_result = snowflake_db.execute_snowflake_fetchall(config_data.mandatory_columns_query1)
-
-        if len(req_result)==0:
-            print('Feed specifc required field configuration not found for feed id: '+ Variable.get('v_feed_id'))
-            req_result = snowflake_db.execute_snowflake_fetchall(config_data.mandatory_columns_query2)
+        req_result = snowflake_db.execute_snowflake_fetchall(config_data.mandatory_columns_query)
         mandatory_columns_arr = [ele[0] for ele in req_result]
     
     except Exception as e:
-        raise Exception("Validation Table Query Failed with error: "+e)
+        raise Exception("Validation Table Query Failed with error: "+ str(e))
 
     # convert exception
     cols = [ele[1] for ele in cols]
@@ -75,6 +68,6 @@ def processMappingAndUpdateSchema(map_result):
         raise Exception("Multiple fields are getting mapped to same field, creating duplicate fields. Duplicate fields :" + str(duplicates))
 
     #write back to schema
-    df2 = pd.DataFrame(cols, columns=df.columns)
+    df2 = pd.DataFrame(cols)
     df2.to_csv('/opt/airflow/dags/utils/schema.csv', index=False)
     return cols
