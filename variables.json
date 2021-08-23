@@ -15,10 +15,24 @@
     },
     "v_batch_ingestion_stage": " ",
     "v_batch_ingestion_stage_file_path": " ",
-    "v_feed_id": 5,
+    "v_feed_id": " ",
     "v_field_seperator": ",",
     "v_file_ext": "CSV",
     "v_file_format": " ",
     "v_flat_file_header_format": "FLAT_FILE_HEADER_FORMAT",
-    "v_pipeline": "PII"
+    "v_pipeline": "PII",
+    "v_data_feed_catalog": "DATA_FEED_CATALOG",
+    "v_cdp_pipeline_table": "CDP_PIPELINE",
+    "v_data_source":"SALESFORCE",
+    "v_data_type":"CUSTOMERS",
+    "v_landing_path": "landing/",
+    "v_microservices_processing_path":"microservices-processing/",
+    "v_batch_ingestion_filename":"test",
+    "v_year_string":"2021",
+    "v_month_string":"Aug",
+    "v_schema_file":"/opt/airflow/dags/utils/testfiles/schema.csv",
+    "v_src_fields":"/opt/airflow/dags/utils/testfiles/src_fields.csv",
+    "v_data_catalog_newfeed_blob":"/blobpath",
+    "v_data_catalog_error_path":"/errorPath"
+
 }

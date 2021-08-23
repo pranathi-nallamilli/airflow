@@ -2,6 +2,7 @@ import sys
 sys.path.insert(0, '/opt/airflow/dags/utils/')
 from utils import mapping_and_validation as mv
 from utils import get_schema as gc
+from utils import data_catalog_lookup as dc
 from utils import snowflake_db 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
@@ -28,5 +29,10 @@ with DAG(dag_id='data_prep_pipeline', default_args=default_args, catchup=False) 
     #                          python_callable=gc.initiate_get_schema,    
     #                          dag=dag )
 
-    check_snowflake_connection >> mapping_and_validation
+    # data_catalog_lookup_task = PythonOperator(task_id='data_catalog_lookup',     
+    #                           python_callable=dc.lookup_data_catalog,    
+    #                           dag=dag )
+
+
+    check_snowflake_connection  >> mapping_and_validation
     

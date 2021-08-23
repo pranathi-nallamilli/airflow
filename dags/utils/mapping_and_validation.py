@@ -7,7 +7,7 @@ from utils import snowflake_db
 from utils import config_data
 from csv import reader
 import pandas as pd
-
+v_schema_file = Variable.get('v_schema_file')
 
 def mapping_validation_initiate_operation(**kwargs): 
 
@@ -41,7 +41,7 @@ def processMappingAndUpdateSchema(map_result):
     v_map_cols = [list(ele) for ele in map_result]
 
     cols= []
-    df = pd.read_csv('/opt/airflow/dags/utils/schema.csv', delimiter=',')
+    df = pd.read_csv(v_schema_file, delimiter=',')
     cols = [list(row) for row in df.values]
     print(cols)
     
@@ -69,5 +69,5 @@ def processMappingAndUpdateSchema(map_result):
 
     #write back to schema
     df2 = pd.DataFrame(cols)
-    df2.to_csv('/opt/airflow/dags/utils/schema.csv', index=False)
+    df2.to_csv(v_schema_file, index=False,header=df.columns)
     return cols
