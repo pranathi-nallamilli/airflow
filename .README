@@ -1,0 +1,13 @@
+How to run:
+Make sure you have docker and docker compose on your system
+
+If running first time, run
+docker-compose up airflow-init
+This will initialize postgres, redis and an initial user
+
+After that use docker-compose up and docker-compose down to start/stop airflow on localhost:8080
+
+Import the variables.json in airflow variables.
+Update your snowflake username and password in the variables.
+
+All set to go!
