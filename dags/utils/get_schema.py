@@ -3,7 +3,6 @@ from airflow.models import Variable
 import sys
 sys.path.insert(0, '/opt/airflow/dags/utils/')
 from utils import snowflake_db
-from csv import reader
 import pandas as pd
 
 v_file_path = Variable.get('v_batch_ingestion_stage') + Variable.get('v_batch_ingestion_stage_file_path')

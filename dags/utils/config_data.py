@@ -10,3 +10,17 @@ pii_query += f"FROM {Variable.get('v_admin_database')}.{Variable.get('v_admin_sc
 pii_query += f"INNER JOIN {Variable.get('v_admin_database')}.{Variable.get('v_admin_schema')}.{Variable.get('v_cdp_pipeline_table')} CP ON UPPER(DFC.PIPELINE) = UPPER(CP.PIPELINE) "
 pii_query += f"WHERE UPPER(DFC.DATA_SOURCE) = '{Variable.get('v_data_source').upper()}' AND UPPER(DFC.DATA_TYPE) = '{Variable.get('v_data_type').upper()}' LIMIT 1"
 
+
+v_batch_ingestion_filename = Variable.get("v_batch_ingestion_filename")
+v_batch_ingestion_stage = Variable.get("v_batch_ingestion_stage")
+v_batch_ingestion_stage_file_path = Variable.get("v_batch_ingestion_stage_file_path")
+v_data_source_flag = Variable.get("v_data_source_flag")
+v_data_type_flag = Variable.get("v_data_type_flag")
+v_file_ext = Variable.get("v_file_ext")
+v_file_format = Variable.get("v_file_format")
+v_batch_ingestion_out_view = Variable.get("v_batch_ingestion_out_view")
+v_etl_stage_database = Variable.get("v_etl_stage_database")
+v_etl_stage_schema = Variable.get("v_etl_stage_schema")
+v_data_source = Variable.get("v_data_source")
+v_data_type = Variable.get("v_data_type")
+v_schema_file = Variable.get('v_schema_file')
