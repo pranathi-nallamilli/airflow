@@ -1,0 +1,11 @@
+﻿Microservice Name,Required Field
+Convert,Convert_Field1
+Convert,Convert_Field2
+Convert,Convert_Field3
+Cass,Cass_Field1
+Cass,Cass_field2
+Pinning,Pinning_Field1
+Pinning,Pinning_Field2
+Stitch,Stitch_Field1
+Stitch,Stitch_Field2
+Stitch,Stitch_Field3
