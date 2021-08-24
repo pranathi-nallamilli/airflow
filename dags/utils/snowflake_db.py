@@ -10,7 +10,7 @@ SNOWFLAKE_CONN_TYPE = Variable.get('v_connection_type')
 SNOWFLAKE_HOST = Variable.get('v_snowflake_host')
 SNOWFLAKE_LOGIN = Variable.get('v_snowflake_login')
 SNOWFLAKE_PWD = Variable.get('v_snowflake_password')
-SNOWFLAKE_SCHEMA = Variable.get('v_admin_schema')
+SNOWFLAKE_SCHEMA = Variable.get('v_etl_stage_schema')
 SNOWFLAKE_EXTRA = Variable.get('v_snowflake_extra')
 
 
