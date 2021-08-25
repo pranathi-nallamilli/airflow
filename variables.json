@@ -17,6 +17,7 @@
     },
     "v_batch_ingestion_stage": "AIRFLOW_STAGE/",
     "v_batch_ingestion_stage_file_path": "airflow_file_processing_demo.csv",
+    "v_file_path":"/opt/airflow/dags/utils/testfiles/airflow_file_processing_demo.csv",
     "v_feed_id": "",
     "v_field_seperator": ",",
     "v_file_ext": "CSV",
