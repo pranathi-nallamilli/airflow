@@ -19,9 +19,12 @@ default_args = {
     'schedule_interval': '@daily'
 }
 
-with DAG(dag_id='data_prep_pipeline', default_args=default_args, catchup=False) as dag:
+command = 'python /opt/airflow/dags/file_splitter_console/hxp_ms_pii_file_splitter/main.py'
+command+=' /opt/airflow/dags/utils/testfiles/splitter_testfile.csv'
+command+=' /opt/airflow/dags/utils/testfiles/required_fields.csv'
+with DAG(dag_id='file_splitter_dag', default_args=default_args, catchup=False) as dag:
 
     file_splitter = BashOperator(task_id='file_splitter', 
-        bash_command='python /opt/airflow/dags/file_splitter_console/hxp_ms_pii_file_splitter/main.py /opt/airflow/dags/file_splitter_console/testfile.csv /opt/airflow/dags/file_splitter_console/required_fields.csv')
+        bash_command=  command)
 
-  
+    file_splitter

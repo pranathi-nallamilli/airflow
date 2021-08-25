@@ -37,7 +37,7 @@
     "v_data_catalog_newfeed_blob":"/blobpath",
     "v_data_catalog_error_path":"/errorPath",
     "v_batch_ingestion_out_view": "BATCH_INGEST",
-    "v_data_source_flag": "",
-    "v_data_type_flag":""
+    "v_data_source_flag": "N",
+    "v_data_type_flag":"N"
 
 }

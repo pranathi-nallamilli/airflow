@@ -4,7 +4,7 @@ from datetime import datetime
 from airflow.providers.microsoft.azure.hooks.wasb import WasbHook
 from csv import reader
 import pandas as pd
-
+import io
 azure = WasbHook(wasb_conn_id='azure_blob')
 
 default_args = {
@@ -13,10 +13,6 @@ default_args = {
     'email': 'owner@test.com',
     'schedule_interval': '@daily'
 }
-
-container = 'archive'
-blob = 'batch-ingestion/NETSUITE/CUSTOMERS/2021/07/12_csv_new_ds_withvalue_RID715997_1_T20210705_122729_853.csv'
-
 
 azure = WasbHook(wasb_conn_id='azure_blob')
 container = 'archive'
@@ -29,8 +25,9 @@ def read_azure_blob_file():
     file = azure.read_file(container,blob)
     print(file)
     #write file locally
-    df = pd.DataFrame(file)
-    df.to_csv('/opt/airflow/dags/utils/testfiles/airflow_test_file.csv', index=False)
+    df = pd.read_csv(io.StringIO(file)  , sep=",")
+    print(df)
+    df.to_csv('/opt/airflow/dags/utils/testfiles/airflow_file_processing_demo.csv', index=False)
     
 
 with DAG(dag_id='azure_dag', default_args=default_args, catchup=False) as dag:
