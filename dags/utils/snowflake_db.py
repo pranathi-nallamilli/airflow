@@ -5,13 +5,13 @@ from airflow import settings
 import logging
 from airflow.models import Variable
 
-SNOWFLAKE_CONN_ID = Variable.get('v_snowflake_connection')
-SNOWFLAKE_CONN_TYPE = Variable.get('v_connection_type')
-SNOWFLAKE_HOST = Variable.get('v_snowflake_host')
-SNOWFLAKE_LOGIN = Variable.get('v_snowflake_login')
-SNOWFLAKE_PWD = Variable.get('v_snowflake_password')
-SNOWFLAKE_SCHEMA = Variable.get('v_etl_stage_schema')
-SNOWFLAKE_EXTRA = Variable.get('v_snowflake_extra')
+SNOWFLAKE_CONN_ID = Variable.get('env_snowflake_connection')
+SNOWFLAKE_CONN_TYPE = Variable.get('env_connection_type')
+SNOWFLAKE_HOST = Variable.get('env_snowflake_host')
+SNOWFLAKE_LOGIN = Variable.get('env_snowflake_login')
+SNOWFLAKE_PWD = Variable.get('env_snowflake_password')
+SNOWFLAKE_SCHEMA = Variable.get('env_admin_schema')
+SNOWFLAKE_EXTRA = Variable.get('env_snowflake_extra')
 
 
 def create_airflow_connection():

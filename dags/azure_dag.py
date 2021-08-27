@@ -5,6 +5,7 @@ from airflow.providers.microsoft.azure.hooks.wasb import WasbHook
 from csv import reader
 import pandas as pd
 import io
+from airflow.models import Variable
 azure = WasbHook(wasb_conn_id='azure_blob')
 
 default_args = {
@@ -15,8 +16,8 @@ default_args = {
 }
 
 azure = WasbHook(wasb_conn_id='azure_blob')
-container = 'archive'
-blob = 'batch-ingestion/NETSUITE/CUSTOMERS/2021/07/12_csv_new_ds_withvalue_RID715997_1_T20210705_122729_853.csv'
+container = Variable.get('env_azure_container')
+blob = Variable.get('env_input_blob')
 
 def azure_connection():
  return(azure.check_for_blob(container,blob))

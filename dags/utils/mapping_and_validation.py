@@ -7,13 +7,17 @@ from utils import snowflake_db
 from utils import config_data
 from csv import reader
 import pandas as pd
-v_schema_file = Variable.get('v_schema_file')
+
+env_file_path = Variable.get('env_file_path')
+v_field_seperator = Variable.get('v_field_seperator')
+v_data_source_flag = Variable.get('v_data_source_flag')
+v_data_type_flag = Variable.get('v_data_type_flag')
 
 def mapping_validation_initiate_operation(**kwargs): 
 
     map_result = snowflake_db.execute_snowflake_fetchall(config_data.map_query)
     
-    cols = processMappingAndUpdateSchema(map_result)
+    cols = UpdateMapping(map_result)
     processRequiredFields(cols)
 
 def processRequiredFields(cols):
@@ -23,10 +27,9 @@ def processRequiredFields(cols):
         mandatory_columns_arr = [ele[0] for ele in req_result]
     
     except Exception as e:
-        raise Exception("Validation Table Query Failed with error: "+ str(e))
+        raise Exception("Validation Table Query Failed with error: "+ e)
 
     # convert exception
-    cols = [ele[1] for ele in cols]
     if('FULLNAME' in cols):
         cols.append('FNAME')
         cols.append('LNAME')
@@ -36,38 +39,35 @@ def processRequiredFields(cols):
     if(len(missed_req_cols)>0):
         raise Exception("Required Columns missing: " + missed_req_cols)
 
-def processMappingAndUpdateSchema(map_result):
+def UpdateMapping(map_result):
     
     v_map_cols = [list(ele) for ele in map_result]
-
     cols= []
-    df = pd.read_csv(v_schema_file, delimiter=',')
-    cols = [list(row) for row in df.values]
+    df = pd.read_csv(env_file_path, delimiter=v_field_seperator)
+    cols=df.columns
     print(cols)
-    
     print(v_map_cols)
+
     for i in range(len(cols)):
         for maplist in v_map_cols:
-            if(cols[i][0].upper() == maplist[1].upper()):
-                print ('Mapping field [' +cols[i][0]+ '] to [' +maplist[0].upper()+ ']')
-                cols[i][1] = maplist[0].upper()
+            if(cols[i].upper() == maplist[1].upper()):
+                print ('Mapping field [' +cols[i]+ '] to [' +maplist[0].upper()+ ']')
+                cols[i] = maplist[0].upper()
 
-    seen = {}
+    seen = []
     duplicates = [] 
 
     for col in cols:
-        if(col[1].upper() not in seen.keys()):
-            seen[col[1]] = col[0]
+        if(col.upper() not in seen):
+            seen.append(col)
         else:
-            duplicates.append([seen[col[1]],col[1]])
-            duplicates.append([col[0],col[1]])     
+            duplicates.append(col)
+            break
     print(seen)
     print(duplicates)
 
     if(len(duplicates)>0):
         raise Exception("Multiple fields are getting mapped to same field, creating duplicate fields. Duplicate fields :" + str(duplicates))
-
-    #write back to schema
-    df2 = pd.DataFrame(cols)
-    df2.to_csv(v_schema_file, index=False,header=df.columns)
+    
+    df.to_csv(env_file_path,header=cols,index=False)
     return cols

@@ -6,13 +6,12 @@ from utils import snowflake_db
 import pandas as pd
 
 #v_file_path = Variable.get('v_batch_ingestion_stage') + Variable.get('v_batch_ingestion_stage_file_path')
-v_file_path = Variable.get('v_file_path')
+env_file_path = Variable.get('env_file_path')
 v_file_ext = Variable.get('v_file_ext')
 v_field_seperator = Variable.get('v_field_seperator')
-v_schema_file = Variable.get('v_schema_file')
-src_fields = Variable.get('v_src_fields')
+src_fields = Variable.get('env_src_fields')
 
-def parseSchema(headers_list):
+def parseHeaders(headers_list):
     seen = {}
     cols = []
     duplicates = []
@@ -54,25 +53,22 @@ def parseSchema(headers_list):
             print ('SEQ field found!')
 
     print(cols)
-    return cols
+    df=pd.read_csv(env_file_path,delimiter=v_field_seperator)
+    df.to_csv(env_file_path,header=[ele[1] for ele in cols],index=False)
     
 
 def initiate_get_schema(**kwargs):
     headers_list = []
-    v_file_ext = 'parquet'
     try:
       if(v_file_ext.upper() == 'CSV'):
-          headers_list = pd.read_csv(v_file_path, delimiter=v_field_seperator).columns
+          headers_list = pd.read_csv(env_file_path, delimiter=v_field_seperator).columns
       elif(v_file_ext.upper() == 'JSON'):
-          headers_list = pd.read_csv(v_file_path, delimiter=v_field_seperator).columns
+          headers_list = pd.read_csv(env_file_path, delimiter=v_field_seperator).columns
       else:
-          headers_list = pd.read_parquet(v_file_path).columns
+          headers_list = pd.read_parquet(env_file_path).columns
       print(headers_list)
     except Exception as e:
       raise Exception("Input file schema is not correct: "+ e)
 
-    v_schema = parseSchema(headers_list)
+    parseHeaders(headers_list)
 
-    #write back to schema
-    df = pd.DataFrame(v_schema,columns=['COLUMNS','MAPPED_COLUMNS'])
-    df.to_csv(v_schema_file, index=False)
