@@ -5,7 +5,6 @@ sys.path.insert(0, '/opt/airflow/dags/utils/')
 from utils import snowflake_db
 import pandas as pd
 
-#v_file_path = Variable.get('v_batch_ingestion_stage') + Variable.get('v_batch_ingestion_stage_file_path')
 env_file_path = Variable.get('env_file_path')
 v_file_ext = Variable.get('v_file_ext')
 v_field_seperator = Variable.get('v_field_seperator')

@@ -2,8 +2,8 @@
 	"env_snowflake_connection": "snowflake_connection",
 	"env_connection_type": "snowflake",
 	"env_snowflake_host":"cdmdev1.east-us-2.azure.snowflakecomputing.com",
-	"env_snowflake_login":"",
-	"env_snowflake_password":"",
+	"env_snowflake_login":"APOORVSINGHAL",
+	"env_snowflake_password":"Ihave2@login",
 	"env_admin_database":"CDP_ADMIN_5_0",
 	"env_admin_schema":"CTRL",
 	"env_snowflake_extra": {
@@ -23,23 +23,34 @@
     "env_src_fields":"/opt/airflow/dags/utils/testfiles/src_fields.csv",
     "env_data_catalog_newfeed_blob":"/blobpath",
     "env_data_catalog_error_path":"/errorPath",
-    "env_azure_container":"archive",
-    "env_input_blob": "batch-ingestion/NETSUITE/CUSTOMERS/2021/07/12_csv_new_ds_withvalue_RID715997_1_T20210705_122729_853.csv",
+    "env_azure_container":"airflow-poc",
+    "env_input_blob": "Bluecore/Email/bluecore_pendleton_attributed_revenue_20210424 (1).csv",
+    "env_invalid_chars_path": "/opt/airflow/dags/utils/testfiles/file_name_invalid_chars.csv",
 
     "v_feed_id": "",
     "v_field_seperator": ",",
     "v_file_ext": "CSV",
     "v_pipeline": "",
     "v_data_source":"x",
-    "v_data_type":"customer",
-    "v_data_source_flag": "Y",
+    "v_data_type":"",
+    "v_data_source_flag": "N",
     "v_data_type_flag":"N",
     "v_pipeline_flow":"",
     "v_is_microservice_processing":"",
     "v_batch_ingestion_archive_newfeed_path":"",
-    "v_batch_ingestion_filename":"input_file",
+    "v_batch_ingestion_filename":"",
     "v_batch_ingestion_blob_output_path":"",
-    "v_new_feed_flag":""
+    "v_new_feed_flag":"",
+    "v_batch_ingestion_path":"",
+    "v_batch_ingestion_file_path":"",
+
+    "run_history_id":"testing",
+    "v_iter_num":"",
+    "v_unq_id":"",
+    "v_sub_folder":"Bluecore/Email/",
+    "v_error_flag":"N",
+    "v_filename":"input.csv",
+    "v_base_folder":"airflow-poc/"
 
 
 

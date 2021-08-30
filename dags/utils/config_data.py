@@ -10,6 +10,15 @@ pii_query += f"FROM {Variable.get('env_admin_database')}.{Variable.get('env_admi
 pii_query += f"INNER JOIN {Variable.get('env_admin_database')}.{Variable.get('env_admin_schema')}.{Variable.get('env_cdp_pipeline_table')} CP ON UPPER(DFC.PIPELINE) = UPPER(CP.PIPELINE) "
 pii_query += f"WHERE UPPER(DFC.DATA_SOURCE) = '{Variable.get('v_data_source').upper()}' AND UPPER(DFC.DATA_TYPE) = '{Variable.get('v_data_type').upper()}' LIMIT 1"
 
+iteration_number_query = 'select cdp_ingestion_seq.nextval ITER_NUM'
+run_history_id = Variable.get("run_history_id")
+v_iter_num = Variable.get("v_iter_num")
+v_unq_id = Variable.get("v_unq_id")
+
+v_sub_folder = Variable.get("v_sub_folder")
+v_error_flag = Variable.get("v_error_flag")
+v_filename = Variable.get("v_filename")
+v_base_folder = Variable.get("v_base_folder")
 
 v_data_source_flag = Variable.get("v_data_source_flag")
 v_data_type_flag = Variable.get("v_data_type_flag")
@@ -17,3 +26,7 @@ v_data_source = Variable.get("v_data_source")
 v_data_type = Variable.get("v_data_type")
 v_field_seperator = Variable.get('v_field_seperator')
 env_file_path=Variable.get('env_file_path')
+
+v_batch_ingestion_path = Variable.get('v_batch_ingestion_path')
+v_batch_ingestion_file_path = Variable.get('v_batch_ingestion_file_path')
+env_invalid_chars_path = Variable.get('env_invalid_chars_path')

@@ -14,7 +14,7 @@ SNOWFLAKE_SCHEMA = Variable.get('env_admin_schema')
 SNOWFLAKE_EXTRA = Variable.get('env_snowflake_extra')
 
 
-def create_airflow_connection():
+def create_snowflake_connection():
     conn = Connection(
         conn_id=SNOWFLAKE_CONN_ID,
         conn_type=SNOWFLAKE_CONN_TYPE,
