@@ -21,13 +21,13 @@ def lookup_data_catalog():
         Variable.set('v_feed_id',str(pipeline_status[0][2]).upper()) 
 
     Variable.set('v_pipeline', pipeline)
-    commonPath= Variable.get('v_data_source').upper()+'/'+Variable.get('v_data_type').upper()+'/'+Variable.get('v_year_string')+'/'+Variable.get('v_month_string')
+    commonPath= Variable.get('v_data_source').upper()+'/'+Variable.get('v_data_type').upper()+'/'+Variable.get('env_year_string')+'/'+Variable.get('env_month_string')
   
     if(Variable.get('v_pipeline') == 'NULL'):
         print ("The input file contains a new-feed or pipeline configuration doesn't exists.")
         Variable.set('v_new_feed_flag','Y')
         Variable.set('v_is_microservice_processing','NULL')
-        batch_ingestion_archived_path = Variable.get('v_data_catalog_newfeed_blob')+commonPath
+        batch_ingestion_archived_path = Variable.get('env_data_catalog_newfeed_blob')+commonPath
         Variable.set('v_batch_ingestion_archive_newfeed_path',batch_ingestion_archived_path)
         
         print(f"The file {Variable.get('v_batch_ingestion_filename')}.{Variable.get('v_file_ext')} will be moved to blob location"+batch_ingestion_archived_path)
@@ -47,12 +47,12 @@ def lookup_data_catalog():
 
     # This dictionary will be used to assign the output blob path depending on the Feed type (PII, non-PII, new-feed)
     pii_location_switch = {
-        "N" : f"{Variable.get('v_landing_path')}"+ commonPath+'/'+v_file_folder,
-        "Y" : f"{Variable.get('v_microservices_processing_path')}"+ commonPath+'/'+v_file_folder,
-        "NULL" : f"{Variable.get('v_data_catalog_newfeed_blob')}"
+        "N" : f"{Variable.get('env_landing_path')}"+ commonPath+'/'+v_file_folder,
+        "Y" : f"{Variable.get('env_microservices_processing_path')}"+ commonPath+'/'+v_file_folder,
+        "NULL" : f"{Variable.get('env_data_catalog_newfeed_blob')}"
     }
 
     # send the file to respective container depending on the data feed catalog lookup
-    Variable.set('v_batch_ingestion_blob_output_path', pii_location_switch.get(Variable.get('v_is_microservice_processing'), Variable.get('v_data_catalog_error_path')))
+    Variable.set('v_batch_ingestion_blob_output_path', pii_location_switch.get(Variable.get('v_is_microservice_processing'), Variable.get('env_data_catalog_error_path')))
 
     print(f"The output file {Variable.get('v_batch_ingestion_filename')} will be written to blob location {Variable.get('v_batch_ingestion_blob_output_path')}")
