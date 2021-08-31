@@ -10,7 +10,7 @@
         "extra__snowflake__account": "cdmdev1",
         "extra__snowflake__region": "east-us-2.azure",
         "extra__snowflake__database": "CDP_ADMIN_5_0",
-        "extra__snowflake__role": "SYSADMIN",
+        "extra__snowflake__role": "HXP_DATA_CONSUMER",
         "extra__snowflake__warehouse": "COMPUTE_WH"
     },
     "env_file_path":"/opt/airflow/dags/utils/testfiles/input_file.csv",

@@ -5,7 +5,9 @@ from airflow.models import Connection
 from airflow import settings
 import logging
 import os
+import io
 from azure.storage.blob import BlobServiceClient
+from airflow import AirflowException
 
 AZURE_CONN_ID = Variable.get("env_azure_connection")
 AZURE_CONN_TYPE = Variable.get("env_azure_connection_type")
@@ -26,6 +28,13 @@ def get_blob_list(path, recursive=False):
             + ";EndpointSuffix=core.windows.net"
         )
 
+    def get_valid_blobs(blobs):
+        files = []
+        for blob in blobs:
+            if blob.split(".")[-1].upper() in ["CSV","JSON","PARQUET"]:
+                files.append(blob)
+        Variable.set("v_container_files", files)
+
     service_client = BlobServiceClient.from_connection_string(
         conn_str=connection_string(AZURE_ACCOUNT, ACCOUNT_PWD)
     )
@@ -43,7 +52,7 @@ def get_blob_list(path, recursive=False):
             files.append(relative_path)
 
     print(files)
-    Variable.set("v_container_files", files)
+    get_valid_blobs(files)    
 
 
 def create_connection_azure():
@@ -68,35 +77,37 @@ def create_connection_azure():
 
 def read_azure_blob_file(blob):
     azure = WasbHook(wasb_conn_id=AZURE_CONN_ID)
-
-    def convert_json_to_csv():
-        # TODO: making it into chunks if need be
-        # file = azure.download(container, blob,0)
-        # file._config.max_chunk_get_size = 1000
-        # for chunk in file.chunks():
-        #     print("chunk", chunk)
-        file = azure.read_file(container, blob, max_concurrency=5)
-        dataframe = pd.read_json(file)
-        dataframe.to_csv(env_file_path, index=False)
-
-    def convert_parquet_to_csv():
-        file = azure.read_file(container, blob, max_concurrency=5)
-        dataframe = pd.read_parquet(file)
-        dataframe.to_csv(env_file_path, index=False)
-
     # list = blob.lstrip('[').rstrip(']').split(',')
     # for item in list:
     #     item=item.strip().lstrip('\'').rstrip('\'')
     #     print(item)
     # print(blob[0])
 
+    # TODO: making it into chunks if need be
+    # file = azure.download(container, blob,0)
+    # file._config.max_chunk_get_size = 1000
+    # for chunk in file.chunks():
+    #     print("chunk", chunk)
+
+    print("Downloading blob", blob)
+    
     file_ext = blob.split(".")[-1].upper()
+    print("File extension is", blob)
+    file = azure.read_file(container, blob, max_concurrency=5)
+    print("file contents", file)
+
     if file_ext == "CSV":
-        azure.get_file(env_file_path, container, blob)
+        dataframe = pd.read_csv(io.StringIO(file))
     elif file_ext == "JSON":
-        convert_json_to_csv(azure, blob)
+        dataframe = pd.read_json(file)
     elif file_ext == "PARQUET":
-        convert_parquet_to_csv(azure, blob)
+        dataframe = pd.read_parquet(file)
+    else:
+        raise AirflowException(
+            f"Blob file has invalid extension!!\nFilename :{blob}"
+        )
+
+    dataframe.to_csv(env_file_path, index=False)
 
 
 def write_to_azure_blob():

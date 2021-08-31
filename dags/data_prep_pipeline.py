@@ -1,5 +1,4 @@
 import sys
-
 sys.path.insert(0, "/opt/airflow/dags/utils/")
 from utils import mapping_and_validation as mv
 from utils import get_schema as gc

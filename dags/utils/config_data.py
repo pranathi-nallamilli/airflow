@@ -10,7 +10,8 @@ pii_query += f"FROM {Variable.get('env_admin_database')}.{Variable.get('env_admi
 pii_query += f"INNER JOIN {Variable.get('env_admin_database')}.{Variable.get('env_admin_schema')}.{Variable.get('env_cdp_pipeline_table')} CP ON UPPER(DFC.PIPELINE) = UPPER(CP.PIPELINE) "
 pii_query += f"WHERE UPPER(DFC.DATA_SOURCE) = '{Variable.get('v_data_source').upper()}' AND UPPER(DFC.DATA_TYPE) = '{Variable.get('v_data_type').upper()}' LIMIT 1"
 
-iteration_number_query = 'select cdp_ingestion_seq.nextval ITER_NUM'
+create_iteration_number_sequence_query = 'IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.SEQUENCES WHERE SEQUENCE_NAME = "cdp_ingestion_seq") BEGIN CREATE SEQUENCE cdp_ingestion_seq START WITH 1 INCREMENT BY 1 NOCYCLE ; END'
+iteration_number_query = 'select ETL_STAGING.HXP_MATILLION_STG.cdp_ingestion_seq.nextval ITER_NUM'
 run_history_id = Variable.get("run_history_id")
 v_iter_num = Variable.get("v_iter_num")
 v_unq_id = Variable.get("v_unq_id")
