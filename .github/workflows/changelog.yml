@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - uses: BobAnkh/auto-generate-changelog@v1.0.7
+    - uses: BobAnkh/auto-generate-changelog@master
       with:
         REPO_NAME: 'DeloitteHux/Data_Prep_Airflow'
         ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
