@@ -3,7 +3,7 @@ Make sure you have docker and docker compose on your system
 
 If running first time, run
 docker-compose up airflow-init
-This will initialize postgres, redis and an initial user
+This will initializes postgres, redis and an initial user
 
 After that use docker-compose up and docker-compose down to start/stop airflow on localhost:8080
 
