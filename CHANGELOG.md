@@ -6,6 +6,9 @@ Changes unreleased.
 
 ### Feature
 
+- pull:
+  - modify readme for Pull request ([46740dd](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/46740ddc5b1147ca0281263b7fadb7891319af46))
+
 - param:
   - add mongo provider in requirement.txt ([4fde64b](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/4fde64b9edecedb94f81e310c4a610f89516dbe7))
 
