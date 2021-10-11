@@ -11,6 +11,9 @@ Changes unreleased.
 
 ### Bug Fixes
 
+- main:
+  - resolve typo in readme ([5edede1](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/5edede142c151ad83bb835c31255cb47e3f968f4))
+
 - pull:
   - update changelog.yml  ([14aed8e](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/14aed8ee141ebe2a579ebbdad9120b6e3cc83407))
   - update changelog.yml ([8a36781](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/8a36781bb4ccdda51bd93b5009e93ceea4551b80))
