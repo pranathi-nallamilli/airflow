@@ -2,3 +2,4 @@ airflow-provider-great-expectations==0.0.6
 apache-airflow-providers-snowflake==2.1.0
 azure-storage-blob==12.8.1
 certifi==2021.5.30
+apache-airflow-providers-mongo==2.1.0
