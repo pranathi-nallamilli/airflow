@@ -1,7 +1,7 @@
 How to run:
 Make sure you have docker and docker compose on your system
 
-If running first time, run
+If running first time, run as
 docker-compose up airflow-init
 This will initializes postgres, redis and an initial users
 
