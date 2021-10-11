@@ -4,6 +4,11 @@
 
 Changes unreleased.
 
+### Feature
+
+- param:
+  - add mongo provider in requirement.txt ([4fde64b](https://github.com/DeloitteHux/Data_Prep_Airflow/commit/4fde64b9edecedb94f81e310c4a610f89516dbe7))
+
 ### Bug Fixes
 
 - pull:
