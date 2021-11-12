@@ -1,0 +1,210 @@
+# Persistant Volumes
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: airflow-logs
+  labels:
+    app: airflow-logs
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /tmp/logs/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: airflow-data
+  labels:
+    app: airflow-data
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /tmp/data/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: airflow-dags
+  labels:
+    app: airflow-dags
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /tmp/dags/
+---
+# Persistant Volume Claims
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-logs
+  namespace: airflow
+  labels:
+    app: airflow-logs
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      app: airflow-logs
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-data
+  namespace: airflow
+  labels:
+    app: airflow-data
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      app: airflow-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-dags
+  namespace: airflow
+  labels:
+    app: airflow-dags
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      app: airflow-dags
+---
+# Secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: airflow-ssh-secret
+  namespace: airflow
+data:
+  # Add your private ssh key in a base64 encoded format
+  # Run this command to get the base 64 encoded string replace the path to the ssh file, (.pub is public the other with the same name is the private file)
+  # base64 <path to ssh private key> -i 0
+  # Copy the output and paste here in quotes
+  gitSshKey: ""
+---
+# To create jfrog docker login key
+# execute below command
+# kubectl create secret docker-registry jfrog-registry \
+# --docker-server=cdm-docker-dev-local.repo.mgnt.in \
+# --docker-username=<email@deloitte.com> \
+# --docker-password=<api-key from Jfrog> \
+# -o yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  creationTimestamp: "2021-09-15T06:18:38Z"
+  name: jfrog-registry
+  namespace: airflow
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ""
+# ---
+# # To create jfrog docker login key
+# # execute below command
+# # kubectl create secret generic azure-blobsecret -n airflow \
+# # -o yaml \
+# # --from-literal azurestorageaccountname=cdmdev1eu2sain \
+# # --from-literal azurestorageaccountkey="<key>" \
+# # --type=Opaque \
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   creationTimestamp: "2021-09-22T06:47:16Z"
+#   name: azure-blobsecret
+#   namespace: airflow
+# type: Opaque
+# data:
+#   azurestorageaccountname: Y2RtZGV2MWV1MnNhaW4=
+#   azurestorageaccountkey: ""
+# ---
+# # Mongo DB
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: mongo-db
+#   namespace: airflow
+# spec:
+#   selector:
+#     matchLabels:
+#       app: mongo-db
+#   serviceName: mongo-db
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: mongo-db
+#     spec:
+#       volumes:
+#         - name: mongo-data-storage
+#           persistentVolumeClaim:
+#             claimName: airflow-data
+#         # - name: mongo-log-storage
+#         #   persistentVolumeClaim:
+#         #     claimName: airflow-logs
+#       terminationGracePeriodSeconds: 10
+#       containers:
+#         - name: mongo-db
+#           image: mongo:latest
+#           # command: 
+#           #   - "mongoimport"
+#           # args:
+#           #   - "--jsonArray"
+#           #   - "-d"
+#           #   - "Test"
+#           #   - "-c"
+#           #   - "Admin"
+#           #   - "--file"
+#           #   - "opt/airflow/dags/utils/testfiles/config_data.json"
+#           # ports:
+#           #   - containerPort: 27017
+#           volumeMounts:
+#             - name: mongo-data-storage
+#               mountPath: "/tmp/data/"
+#             # - name: mongo-log-storage
+#             #   mountPath: "/tmp/logs/" 
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mongo-db
+#   namespace: airflow
+#   labels:
+#     app: mongo-db
+# spec:
+#   type: ClusterIP
+#   ports:
+#   - name: mongo-db
+#     port: 27017
+#     # targetPort: 27017
+#   selector:
+#     app: mongo-db

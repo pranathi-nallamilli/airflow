@@ -13,52 +13,27 @@
         "extra__snowflake__role": "HXP_DATA_CONSUMER",
         "extra__snowflake__warehouse": "COMPUTE_WH"
     },
-    "env_file_path":"/opt/airflow/dags/utils/testfiles/input_file.csv",
+
+    "env_file_splitter_path":"hxp_ms_pii_file_splitter",
+    
     "env_data_feed_catalog": "DATA_FEED_CATALOG",
     "env_cdp_pipeline_table": "CDP_PIPELINE",
-    "env_landing_path": "landing/",
+    
     "env_microservices_processing_path":"microservices-processing/",
-    "env_year_string":"2021",
-    "env_month_string":"Aug",
-    "env_src_fields":"/opt/airflow/dags/utils/testfiles/src_fields.csv",
-    "env_data_catalog_newfeed_blob":"/blobpath",
+    
+    "env_data_catalog_new_feed_blob":"/blobpath",
     "env_data_catalog_error_path":"/errorPath",
-    "env_invalid_chars_path": "/opt/airflow/dags/utils/testfiles/file_name_invalid_chars.csv",
-
-    "env_azure_connection" : "azure_blob",
-    "env_azure_connection_type": "wasb",
-    "env_azure_container":"airflow-poc",
-    "env_azure_account":"cdmdev1eu2sain",
-    "env_azure_pwd":"sHpGx5eB96aYqNqtONlN0r+RCzmkPL9yMx5zPHAzSshzbmqJwalO7b3huGV2gelWiDPSBa2fHHrrZIAbLgsTrQ==",
-
+    
     "v_container_files":"",
-    "v_current_input_file":"",
-    "v_feed_id": "",
-    "v_field_seperator": ",",
-    "v_file_ext": "CSV",
-    "v_pipeline": "",
-    "v_data_source":"",
-    "v_data_type":"",
-    "v_data_source_flag": "N",
-    "v_data_type_flag":"N",
-    "v_pipeline_flow":"",
-    "v_is_microservice_processing":"",
-    "v_batch_ingestion_archive_newfeed_path":"",
-    "v_batch_ingestion_filename":"",
-    "v_batch_ingestion_blob_output_path":"",
-    "v_new_feed_flag":"",
-    "v_batch_ingestion_path":"",
-    "v_batch_ingestion_file_path":"",
-
-    "run_history_id":"testing",
-    "v_iter_num":"",
-    "v_unq_id":"",
-    "v_sub_folder":"Bluecore/Email/",
-    "v_error_flag":"N",
-    "v_filename":"input.csv",
-    "v_base_folder":"airflow-poc/"
-
-
-
-
+    "env_data_path": "/tmp/data/",
+    "env_data_prep_image":"cdm-docker-dev-local.repo.mgnt.in/hxp-cdm-data-prep-py:40",
+    "env_pvc_data": "airflow-data",
+    "emv_delete_source_blob": "True",
+    "env_mongo_connection":"mongo_connection",
+    "env_mongo_connection_type":"mongo",
+    "env_mongo_database":"test",
+    "env_mongo_collection":"admin",
+    "env_mongo_host":"localhost:27017",
+    "env_selected_query":"NOSQL",
+    "env_selected_db":"MONGODB"
 }

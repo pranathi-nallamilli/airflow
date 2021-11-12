@@ -1,5 +1,10 @@
-airflow-provider-great-expectations==0.0.6
 apache-airflow-providers-snowflake==2.1.0
 azure-storage-blob==12.8.1
 certifi==2021.5.30
+apache-airflow-providers-cncf-kubernetes==2.0.2
+pyarrow==5.0.0
+pandas==1.1.5
+pylint==2.9.6
+pytest==6.2.4
 apache-airflow-providers-mongo==2.1.0
+pymongo==3.12.0
