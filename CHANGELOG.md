@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## Unreleased
+## [v1.0.0](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.0.0) - 2021-11-12 11:48:40
 
-Changes unreleased.
+This is a stable version of data prep that is working on airflow
 
 ### Feature
 
