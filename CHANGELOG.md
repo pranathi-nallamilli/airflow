@@ -4,6 +4,11 @@
 
 Changes unreleased.
 
+### Feature
+
+- Data Proc & Data Load:
+  - Data proc (#6) ([a50a54f](https://github.com/DeloitteHux/hxp-cdm-airflow/commit/a50a54fdf1b4efd2cf78252bfa08dd6baa9b79e9)) ([#6](https://github.com/DeloitteHux/hxp-cdm-airflow/pull/6))
+
 ### Documentation
 
 - param:
