@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: airflow-logs
+  namespace: airflow
   labels:
     app: airflow-logs
 spec:
@@ -18,12 +19,13 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: airflow-data
+  namespace: airflow
   labels:
     app: airflow-data
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -33,6 +35,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: airflow-dags
+  namespace: airflow
   labels:
     app: airflow-dags
 spec:
@@ -43,6 +46,22 @@ spec:
     - ReadWriteMany
   hostPath:
     path: /tmp/dags/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: airflow-pw
+  namespace: airflow
+  labels:
+    app: airflow-pw
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /tmp/pw/
 ---
 # Persistant Volume Claims
 apiVersion: v1
@@ -76,7 +95,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
   selector:
     matchLabels:
       app: airflow-data
@@ -98,6 +117,24 @@ spec:
   selector:
     matchLabels:
       app: airflow-dags
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-pw
+  namespace: airflow
+  labels:
+    app: airflow-pw
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      app: airflow-pw
 ---
 # Secrets
 apiVersion: v1
@@ -127,84 +164,87 @@ metadata:
   namespace: airflow
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: ""
-# ---
-# # To create jfrog docker login key
-# # execute below command
-# # kubectl create secret generic azure-blobsecret -n airflow \
-# # -o yaml \
-# # --from-literal azurestorageaccountname=cdmdev1eu2sain \
-# # --from-literal azurestorageaccountkey="<key>" \
-# # --type=Opaque \
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   creationTimestamp: "2021-09-22T06:47:16Z"
-#   name: azure-blobsecret
-#   namespace: airflow
-# type: Opaque
-# data:
-#   azurestorageaccountname: Y2RtZGV2MWV1MnNhaW4=
-#   azurestorageaccountkey: ""
-# ---
-# # Mongo DB
-# apiVersion: apps/v1
-# kind: StatefulSet
-# metadata:
-#   name: mongo-db
-#   namespace: airflow
-# spec:
-#   selector:
-#     matchLabels:
-#       app: mongo-db
-#   serviceName: mongo-db
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: mongo-db
-#     spec:
-#       volumes:
-#         - name: mongo-data-storage
-#           persistentVolumeClaim:
-#             claimName: airflow-data
-#         # - name: mongo-log-storage
-#         #   persistentVolumeClaim:
-#         #     claimName: airflow-logs
-#       terminationGracePeriodSeconds: 10
-#       containers:
-#         - name: mongo-db
-#           image: mongo:latest
-#           # command: 
-#           #   - "mongoimport"
-#           # args:
-#           #   - "--jsonArray"
-#           #   - "-d"
-#           #   - "Test"
-#           #   - "-c"
-#           #   - "Admin"
-#           #   - "--file"
-#           #   - "opt/airflow/dags/utils/testfiles/config_data.json"
-#           # ports:
-#           #   - containerPort: 27017
-#           volumeMounts:
-#             - name: mongo-data-storage
-#               mountPath: "/tmp/data/"
-#             # - name: mongo-log-storage
-#             #   mountPath: "/tmp/logs/" 
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: mongo-db
-#   namespace: airflow
-#   labels:
-#     app: mongo-db
-# spec:
-#   type: ClusterIP
-#   ports:
-#   - name: mongo-db
-#     port: 27017
-#     # targetPort: 27017
-#   selector:
-#     app: mongo-db
+  .dockerconfigjson: ''
+---
+# Mongo DB for microservices
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-db
+  namespace: airflow
+spec:
+  selector:
+    matchLabels:
+      app: mongo-db
+  serviceName: mongo-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+    spec:
+      volumes:
+        - name: mongo-data-storage
+          persistentVolumeClaim:
+            claimName: airflow-data
+        # - name: mongo-log-storage
+        #   persistentVolumeClaim:
+        #     claimName: airflow-logs
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo-db
+          image: mongo:latest
+          command: 
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - rs0
+          volumeMounts:
+            - name: mongo-data-storage
+              mountPath: "/tmp/data/"
+            # - name: mongo-log-storage
+            #   mountPath: "/tmp/logs/" 
+---
+# Mongo DB for data
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-db-data
+  namespace: airflow
+spec:
+  selector:
+    matchLabels:
+      app: mongo-db-data
+  serviceName: mongo-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-db-data
+    spec:
+      volumes:
+        - name: mongo-data-storage
+          persistentVolumeClaim:
+            claimName: airflow-data
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo-db-data
+          image: mongo:latest
+          volumeMounts:
+            - name: mongo-data-storage
+              mountPath: "/tmp/data/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db
+  namespace: airflow
+  labels:
+    app: mongo-db
+spec:
+  type: ClusterIP
+  ports:
+  - name: mongo-db
+    port: 27017
+  selector:
+    app: mongo-db

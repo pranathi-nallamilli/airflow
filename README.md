@@ -61,14 +61,14 @@ kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
 
 # Add Github SSH private key to the apply_env.yaml file (instructions in the file)
 
-# For Local
+# Apply the kubernetes configuration for Local Env
 kubectl apply -f apply_local.yaml
 
-# For Deployed Env
+# Apply the kubernetes configuration for Deployed Env
 kubectl apply -f apply_deploy.yaml
 
-# Mongo data file load
-kubectl exec -it mongo-db-0 -n airflow -- mongoimport --jsonArray -d test -c admin --file tmp/data/config/data.json
+# Create a Secrect for Airflow Webserver
+kubectl -n airflow create secret generic my-webserver-secret --from-literal="webserver-secret-key=$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
 
 # helm repo add
 helm repo add apache-airflow https://airflow.apache.org
@@ -76,20 +76,32 @@ helm repo add apache-airflow https://airflow.apache.org
 # helm update
 helm repo update
 
-# For Local helm update
+# To run the Helm Chart for Local Env
 helm upgrade --install airflow apache-airflow/airflow -n airflow -f values_local.yaml --debug
+# Followed by port forwarding from internal Cluster to localhost
+kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow --context kind-airflow-cluster
 
-# For Deployed Env helm update
+# To run the Helm Chart for Deployed Env
 helm upgrade --install airflow apache-airflow/airflow -n airflow -f values_deploy.yaml --debug
 
-kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow --context kind-airflow-cluster
+# MongoDB import data for data prep
+kubectl exec -it mongo-db-data-0 -n airflow -- mongoimport --jsonArray -d test -c admin --file tmp/data/config/data.json
+
+# MongoDB initiate for micro-services
+kubectl exec -it mongo-db-0 -n airflow bin/bash
+    mongo
+        rs.initiate()
+        rs.status()
+        exit
+    mongo /tmp/data/config/startup.js
+    exit
 
 ```
 
 ### 🚀 NOTE:
 
-> 1. Now you can open localhost:8080 in your browser to access airflow UI
-> 2. Import the variables.json in airflow variables. Update your snowflake username and password in the variables.
+> 1. Now you can open localhost:8080 in your local browser or on the loadBalancer End point in the deployed environment to access airflow UI
+> 2. Import the variables.json in airflow variables. Update the required variables in the UI.
 > 3. All set to go!
 
 ### Debugging
@@ -110,7 +122,10 @@ exec < airflow-scheduler-pod-name > -n airflow -- < command >
 # Delete the cluster
 kind delete cluster --name airflow-cluster
 
-# Run docker realted commands
+# To delete pods forcefully:
+kind delete pods -n airflow --grace-period=0 --force <pod_name>
+
+# To run docker related commands
 sudo chmod 666 /var/run/docker.sock
 
 # Deployment find services running
@@ -118,12 +133,5 @@ kubectl get svc -n airflow
 
 # Deployment edit Webserver service from ClusterIP to LoadBalancer
 kubectl edit svc -n airflow
-
-kubectl delete pvc -n airflow pvc-airflow-poc && kubectl delete pv pv-airflow-poc
-
-kubectl patch pvc -n airflow pvc-airflow-poc -p '{"metadata":{"finalizers":null}}'
-
-kubectl apply -f pv.yaml && kubectl apply -f pvc.yaml
-
 
 ```

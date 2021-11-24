@@ -37,17 +37,13 @@ gid: 0
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overrides all the specific images below
-# defaultAirflowRepository: apache/airflow
-# defaultAirflowRepository: san1/k8_airflow
 defaultAirflowRepository: niranjannareshandeloitte/airflow-custom
 
 # Default airflow tag to deploy
-# defaultAirflowTag: "2.1.2"
-# defaultAirflowTag: "latest"
 defaultAirflowTag: "1.0.1"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "2.1.4"
+airflowVersion: "2.2.1"
 
 # Images
 images:
@@ -63,8 +59,7 @@ images:
   pod_template:
     repository: ~
     tag: ~
-    # pullPolicy: IfNotPresent
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   flower:
     repository: ~
     tag: ~
@@ -200,6 +195,7 @@ airflowLocalSettings: |-
 rbac:
   # Specifies whether RBAC resources should be created
   create: true
+  createSCCRoleBinding: false
 
 # Airflow executor
 # Options: LocalExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
@@ -263,10 +259,6 @@ extraEnv: |-
     value: "False"
   - name: AIRFLOW__WEBSERVER__EXPOSE_CONFIG
     value: "True"
-# eg:
-# extraEnv: |
-#   - name: AIRFLOW__CORE__LOAD_EXAMPLES
-#     value: 'True'
 
 # Extra envFrom 'items' that will be added to the definition of airflow containers
 # A string is expected (can be templated).
@@ -315,7 +307,7 @@ fernetKeySecretName: ~
 
 # Flask secret key for Airflow Webserver: `[webserver] secret_key` in airflow.cfg
 webserverSecretKey: ~
-webserverSecretKeySecretName: ~
+webserverSecretKeySecretName: my-webserver-secret
 
 # In order to use kerberos you need to create secret containing the keytab file
 # The secret name should follow naming convention of the application where resources are
@@ -469,11 +461,11 @@ workers:
 
   # Mount additional volumes into worker.
   extraVolumes:
-    - name: pvc-airflow-dags
+    - name: airflow-data
       persistentVolumeClaim:
-        claimName: pvc-airflow-dags
+        claimName: airflow-data
   extraVolumeMounts:                           
-    - name: pvc-airflow-dags
+    - name: airflow-data
       mountPath: /tmp/data/
 
   # Select certain nodes for airflow worker pods.
@@ -522,9 +514,9 @@ scheduler:
   # scheduler and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 10
-    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 5
+    periodSeconds: 60
   # Airflow 2.0 allows users to run multiple schedulers,
   # However this feature is only recommended for MySQL 8+ and Postgres
   replicas: 1
@@ -612,6 +604,7 @@ scheduler:
     #  requests:
     #   cpu: 100m
     #   memory: 128Mi
+    
 # Airflow create user job settings
 createUserJob:
   # Annotations on the create user job pod
@@ -819,9 +812,9 @@ triggerer:
   # triggerer and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 10
-    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 5
+    periodSeconds: 60
 
   # Create ServiceAccount
   serviceAccount:
@@ -1355,7 +1348,6 @@ dags:
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    # repo: https://github.com/apache/airflow.git
     repo: ssh://git@github.com/DeloitteHux/Data_Prep_Airflow.git
     # branch: v2-1-stable
     branch: file_share_local

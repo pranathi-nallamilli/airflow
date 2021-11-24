@@ -12,6 +12,7 @@ default_args = {
     "start_date": datetime(2021, 1, 1),
     "owner": "Niranjan Nareshan",
     "email": "nnareshan@deloitte.com",
+    "tags": ["demo"]
 }
 
 with DAG(
@@ -39,7 +40,8 @@ with DAG(
     get_all_files = ShortCircuitOperator(
         task_id="get_all_files",
         python_callable=it.get_files_list,
-        op_kwargs={"path": "{{ var.value.env_data_path }}input"},
+        op_kwargs={"path": "{{ var.value.env_data_path }}{{ var.value.env_pre_processing_path }}",
+                   "variable_name": "v_data_prep_input_files"},
         dag=dag,
     )
 

@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: airflow-data
+  namespace: airflow
 spec:
   accessModes:
     - ReadWriteMany
@@ -15,6 +16,20 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: airflow-logs
+  namespace: airflow
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefiles
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-pw
+  namespace: airflow
 spec:
   accessModes:
     - ReadWriteMany
@@ -71,7 +86,7 @@ data:
   azurestorageaccountname: ''
   azurestorageaccountkey: ''
 ---
-# Mongo DB
+# Mongo DB for microservices
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -96,23 +111,40 @@ spec:
       containers:
         - name: mongo-db
           image: mongo:latest
-          # command: 
-          #   - "mongoimport"
-          # args:
-          #   - "--jsonArray"
-          #   - "-d"
-          #   - "Test"
-          #   - "-c"
-          #   - "Admin"
-          #   - "--file"
-          #   - "opt/airflow/dags/utils/testfiles/config_data.json"
-          # ports:
-          #   - containerPort: 27017
           volumeMounts:
             - name: mongo-data-storage
               mountPath: "/tmp/data/"
             # - name: mongo-log-storage
             #   mountPath: "/tmp/logs/" 
+---
+# Mongo DB for data
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-db-data
+  namespace: airflow
+spec:
+  selector:
+    matchLabels:
+      app: mongo-db-data
+  serviceName: mongo-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-db-data
+    spec:
+      volumes:
+        - name: mongo-data-storage
+          persistentVolumeClaim:
+            claimName: airflow-data
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo-db-data
+          image: mongo:latest
+          volumeMounts:
+            - name: mongo-data-storage
+              mountPath: "/tmp/data/"
 ---
 apiVersion: v1
 kind: Service
@@ -126,6 +158,6 @@ spec:
   ports:
   - name: mongo-db
     port: 27017
-    # targetPort: 27017
   selector:
     app: mongo-db
+    

@@ -1,12 +1,12 @@
 {
-	"env_snowflake_connection": "snowflake_connection",
-	"env_connection_type": "snowflake",
-	"env_snowflake_host":"cdmdev1.east-us-2.azure.snowflakecomputing.com",
-	"env_snowflake_login":"",
-	"env_snowflake_password":"",
-	"env_admin_database":"CDP_ADMIN_5_0",
-	"env_admin_schema":"CTRL",
-	"env_snowflake_extra": {
+    "env_snowflake_connection": "snowflake_connection",
+    "env_connection_type": "snowflake",
+    "env_snowflake_host": "cdmdev1.east-us-2.azure.snowflakecomputing.com",
+    "env_snowflake_login": "",
+    "env_snowflake_password": "",
+    "env_admin_database": "CDP_ADMIN_5_0",
+    "env_admin_schema": "CTRL",
+    "env_snowflake_extra": {
         "extra__snowflake__account": "cdmdev1",
         "extra__snowflake__region": "east-us-2.azure",
         "extra__snowflake__database": "CDP_ADMIN_5_0",
@@ -14,26 +14,56 @@
         "extra__snowflake__warehouse": "COMPUTE_WH"
     },
 
-    "env_file_splitter_path":"hxp_ms_pii_file_splitter",
-    
+    "env_data_load_sf_account":"cdmdev1.east-us-2.azure",
+    "env_data_load_sf_database":"HXP_SANDBOX",
+    "env_data_load_sf_schema": "SANDBOX",
+    "env_data_load_sf_table":"LoadTest",
+    "env_data_load_sf_truncate":"True", 
+    "env_data_load_sf_type":"MANIFEST", 
+
+
     "env_data_feed_catalog": "DATA_FEED_CATALOG",
     "env_cdp_pipeline_table": "CDP_PIPELINE",
+
+    "env_microservices_processing_path": "microservices-processing/",
+    "env_batch_ingestion_path": "batch-ingestion/",
+    "env_pre_processing_path": "pre-processing/",
+    "env_nms_output_folder": "datalake/non-pii/",
+    "env_temp_processing_path": "temp/",
+
+    "env_data_catalog_new_feed_blob": "blobpath/",
+    "env_data_catalog_error_path": "errorPath/",
+
+    "v_data_prep_input_files": "",
+    "v_data_proc_input_files": "",
+    "v_data_load_input_files": "",
     
-    "env_microservices_processing_path":"microservices-processing/",
-    
-    "env_data_catalog_new_feed_blob":"/blobpath",
-    "env_data_catalog_error_path":"/errorPath",
-    
-    "v_container_files":"",
-    "env_data_path": "/tmp/data/",
-    "env_data_prep_image":"cdm-docker-dev-local.repo.mgnt.in/hxp-cdm-data-prep-py:40",
     "env_pvc_data": "airflow-data",
-    "emv_delete_source_blob": "True",
-    "env_mongo_connection":"mongo_connection",
-    "env_mongo_connection_type":"mongo",
-    "env_mongo_database":"test",
-    "env_mongo_collection":"admin",
-    "env_mongo_host":"localhost:27017",
-    "env_selected_query":"NOSQL",
-    "env_selected_db":"MONGODB"
+    "env_pvc_pw": "airflow-pw",
+    
+    "env_data_path": "/tmp/data/",
+    "env_pw_path": "/pw",
+    
+    "env_mongo_connection": "mongo_connection",
+    "env_mongo_connection_type": "mongo",
+    "env_mongo_database": "test",
+    "env_mongo_collection": "admin",
+    "env_mongo_host": "localhost:27017",
+    "mongo_conn_string": "mongodb://mongo-db:27017/",
+    "env_mongo_user":"",
+    "env_mongo_password":"",
+
+    "env_selected_query": "NOSQL",
+    "env_selected_db": "MONGODB",
+    
+    "env_data_prep_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp9a-data-prep:141",
+    "env_cleanse_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp1b-cleanse-console-py:122",
+    "env_convert_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp2d-convert-console-py:399",
+    "env_cass_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp3c-cass-console-java:28",
+    "env_pinning_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp7-pinning-console:123",
+    "env_stitch_image": "cdm-docker-dev-local.repo.mgnt.in/cdm-dp8a-stitch-console:152",
+    "env_data_load_image":"cdm-docker-dev-local.repo.mgnt.in/hxp-datalake-ingestion-test-py:24",
+
+    "is_cleanse_enabled": "True",
+    "env_delete_source_blob": "False"
 }

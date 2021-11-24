@@ -16,6 +16,8 @@ nodes:
       containerPath: /tmp/data
     - hostPath: ./dags
       containerPath: /tmp/dags
+    - hostPath: ./pw
+      containerPath: /tmp/pw
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -30,6 +32,8 @@ nodes:
       containerPath: /tmp/data
     - hostPath: ./dags
       containerPath: /tmp/dags
+    - hostPath: ./pw
+      containerPath: /tmp/pw
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -44,3 +48,5 @@ nodes:
       containerPath: /tmp/data
     - hostPath: ./dags
       containerPath: /tmp/dags
+    - hostPath: ./pw
+      containerPath: /tmp/pw

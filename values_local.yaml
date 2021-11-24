@@ -37,13 +37,9 @@ gid: 0
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overrides all the specific images below
-# defaultAirflowRepository: apache/airflow
-# defaultAirflowRepository: san1/k8_airflow
 defaultAirflowRepository: airflow-custom
 
 # Default airflow tag to deploy
-# defaultAirflowTag: "2.1.2"
-# defaultAirflowTag: "latest"
 defaultAirflowTag: "1.0.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
@@ -63,8 +59,7 @@ images:
   pod_template:
     repository: ~
     tag: ~
-    # pullPolicy: IfNotPresent
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   flower:
     repository: ~
     tag: ~
@@ -200,6 +195,7 @@ airflowLocalSettings: |-
 rbac:
   # Specifies whether RBAC resources should be created
   create: true
+  createSCCRoleBinding: false
 
 # Airflow executor
 # Options: LocalExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
@@ -311,7 +307,7 @@ fernetKeySecretName: ~
 
 # Flask secret key for Airflow Webserver: `[webserver] secret_key` in airflow.cfg
 webserverSecretKey: ~
-webserverSecretKeySecretName: ~
+webserverSecretKeySecretName: my-webserver-secret
 
 # In order to use kerberos you need to create secret containing the keytab file
 # The secret name should follow naming convention of the application where resources are
@@ -428,7 +424,7 @@ workers:
     # Execute init container to chown log directory.
     # This is currently only needed in kind, due to usage
     # of local-path provisioner.
-    fixPermissions: false
+    fixPermissions: true
 
   kerberosSidecar:
     # Enable kerberos sidecar
@@ -495,6 +491,8 @@ workers:
   #   hostnames:
   #   - "test.hostname.two"
 
+  podAnnotations: {}
+
   logGroomerSidecar:
     # Command to use when running the Airflow worker log groomer sidecar (templated).
     command: ~
@@ -516,9 +514,9 @@ scheduler:
   # scheduler and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 10
-    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 5
+    periodSeconds: 60
   # Airflow 2.0 allows users to run multiple schedulers,
   # However this feature is only recommended for MySQL 8+ and Postgres
   replicas: 1
@@ -588,6 +586,8 @@ scheduler:
             topologyKey: "kubernetes.io/hostname"
   tolerations: []
 
+  podAnnotations: {}
+
   logGroomerSidecar:
     # Whether to deploy the Airflow scheduler log groomer sidecar.
     enabled: true
@@ -604,6 +604,7 @@ scheduler:
     #  requests:
     #   cpu: 100m
     #   memory: 128Mi
+    
 # Airflow create user job settings
 createUserJob:
   # Annotations on the create user job pod
@@ -626,6 +627,14 @@ createUserJob:
   affinity: {}
   tolerations: []
 
+  resources: {}
+  #  limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  #  requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
 # Airflow database migration job settings
 migrateDatabaseJob:
   # Annotations on the database migration pod
@@ -643,6 +652,14 @@ migrateDatabaseJob:
 
     # Annotations to add to migrate database job kubernetes service account.
     annotations: {}
+
+  resources: {}
+  #  limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  #  requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   # Launch additional containers into database migration job
   extraContainers: []
@@ -772,8 +789,11 @@ webserver:
             topologyKey: "kubernetes.io/hostname"
   tolerations: []
 
+  podAnnotations: {}
+
 # Airflow Triggerer Config
 triggerer:
+  enabled: true
   # Number of airflow triggerers in the deployment
   replicas: 1
 
@@ -792,9 +812,9 @@ triggerer:
   # triggerer and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 10
-    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 5
+    periodSeconds: 60
 
   # Create ServiceAccount
   serviceAccount:
@@ -843,6 +863,8 @@ triggerer:
                 component: triggerer
             topologyKey: "kubernetes.io/hostname"
   tolerations: []
+
+  podAnnotations: {}
 
 # Flower settings
 flower:
@@ -925,6 +947,8 @@ flower:
   affinity: {}
   tolerations: []
 
+  podAnnotations: {}
+
 # Statsd settings
 statsd:
   enabled: true
@@ -967,6 +991,10 @@ statsd:
 pgbouncer:
   # Enable PgBouncer
   enabled: false
+  # Command to use for PgBouncer(templated).
+  command: ["pgbouncer", "-u", "nobody", "/etc/pgbouncer/pgbouncer.ini"]
+  # Args to use for PgBouncer(templated).
+  args: ~
 
   # Create ServiceAccount
   serviceAccount:
@@ -1177,6 +1205,14 @@ cleanup:
   affinity: {}
   tolerations: []
 
+  resources: {}
+  #  limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  #  requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
   # Create ServiceAccount
   serviceAccount:
     # Specifies whether a ServiceAccount should be created
@@ -1298,9 +1334,9 @@ dags:
     # Enable persistent volume for storing dags
     enabled: true
     # Volume size for dags
-    # size: 100Gi
+    # size: 1Gi
     # If using a custom storageClass, pass name here
-    # storageClassName: managed-premium
+    # storageClassName: 
     # access mode of the persistent volume
     # accessMode: ReadWriteOnce
     ## the name of an existing PVC to use
@@ -1312,7 +1348,6 @@ dags:
     # ssh examples ssh://git@github.com/apache/airflow.git
     # git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    # repo: https://github.com/apache/airflow.git
     repo: ssh://git@github.com/DeloitteHux/Data_Prep_Airflow.git
     # branch: v2-1-stable
     branch: file_share_local

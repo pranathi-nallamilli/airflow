@@ -194,3 +194,19 @@ def setup_config_data():
 
     elif SELECTED_QUERY == "NOSQL":
         fo.write_config_file(CONFIG_PATH, execute_fetchall())
+
+
+def get_microservice_status(pipeline: str):
+    """
+    Method to lookup the database config file and return the list of microservices for a pipeline
+    """
+    data_frame = pd.read_json(
+        f"{Variable.get('env_data_path')}config/config_data.json")
+
+    selected_df = data_frame.query(f"pipeline == '{pipeline}'",
+                                   inplace=False).reset_index(drop=True)
+    # Since we reset index take the first element
+    key = 0
+    microservice_list = ','.join(selected_df["cdp_pipeline"].to_dict()[
+                                 key]['microservice_list'])
+    return microservice_list
