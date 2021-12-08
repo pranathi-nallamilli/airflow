@@ -1,3 +1,10 @@
+# [1.2.0-1stversion.1](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.1.0...v1.2.0-1stversion.1) (2021-12-08)
+
+
+### Features
+
+* **push:** update version1 ([c732502](https://github.com/DeloitteHux/hxp-cdm-airflow/commit/c7325022aa15e668d43e081ac6926d85ee661095))
+
 # [1.1.0](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.0.1...v1.1.0) (2021-12-08)
 
 
