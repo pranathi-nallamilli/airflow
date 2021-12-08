@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v1.1.0](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.1.0) - 2021-12-08 12:20:06
+
+# [1.1.0](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.0.1...v1.1.0) (2021-12-08)
+
+
+### Features
+
+* **push:** update versio1 ([ace5353](https://github.com/DeloitteHux/hxp-cdm-airflow/commit/ace53530bfdb34f9ec12ef65a1d17d29aac2ae4c))
+
+
+
+
+
 ## [v1.0.1](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.0.1) - 2021-11-24 11:16:38
 
 This release has code that includes Data Proc and its micro-services and Data Load connected to snowflake 
