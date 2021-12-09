@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v1.2.0-semantic.1](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.2.0-semantic.1) - 2021-12-09 09:49:44
+
+# [1.2.0-semantic.1](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.2.0-poc.1...v1.2.0-semantic.1) (2021-12-09)
+
+
+### Features
+
+* **push:** semantic ([0755c82](https://github.com/DeloitteHux/hxp-cdm-airflow/commit/0755c82167a773f03c567a8c2d3fecf026719a7c))
+
+
+
+
+
 ## [v1.2.0-poc.1](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.2.0-poc.1) - 2021-12-09 09:36:50
 
 # [1.2.0-poc.1](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.2.0-beta-release.2...v1.2.0-poc.1) (2021-12-09)
