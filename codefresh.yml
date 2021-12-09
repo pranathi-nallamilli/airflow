@@ -1,0 +1,65 @@
+version: "1.0"
+
+stages:
+  - "clone"
+  - "prepare"
+  - "generate_version"
+  - "package_project"
+  - "push_artifactory"
+
+steps:
+  CloneRepository_split:
+    title: "Cloning repository"
+    stage: "clone"
+    type: "git-clone"
+    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    revision: "${{CF_REVISION}}"
+
+  BumpBuildNumber:
+    stage: "prepare"
+    title: Bump default BUILD_NUMBER annotation
+    type: bump-build-number
+
+  PrepareBuildDetails:
+    stage: "prepare"
+    title: Prepare Build Details
+    image: huxhub.repo.mgnt.in/alpine
+    commands:
+       - cf_export PACKAGE_NAME="cdm-airflow"
+       
+  GetGitToken:
+      title: Reading Github token
+      stage: generate_version
+      image: 'node'
+      commands:
+      - cf_export GITHUB_TOKEN="${{GITHUB_TOKEN}}"
+  
+  generate_version:
+        title: "Generating semantic release number"
+        type: "freestyle"
+        stage: "generate_version"
+        image: "node"
+        working_directory: "${{CloneRepository_split}}"
+        commands:
+          - npm install @semantic-release/git @semantic-release/changelog -D
+          - npx semantic-release 
+
+  package_project:
+    stage: package_project
+    title: Building split Docker Image
+    type: build
+    image_name: '${{PACKAGE_NAME}}'
+    working_directory: "${{CloneRepository_split}}"
+    dockerfile: Dockerfile
+    tag: '${{CF_BUILD_NUMBER}}'
+
+  PublishToArtifactory:
+    stage: push_artifactory
+    title: Publish artifact and codefresh build info to Artifactory
+    type: deloittehux/jfrog-docker-publish
+    arguments:
+      BUILD_NAME: '${{PACKAGE_NAME}}'
+      BUILD_NUMBER: '${{CF_BUILD_NUMBER}}'
+      JFROG_REGISTRY: '${{JFROG_REGISTRY}}/cdm-Airflow'
+      BUILD_TAG: '${{CF_BUILD_NUMBER}}'
+      
