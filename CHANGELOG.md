@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v1.2.0-beta-release.2](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.2.0-beta-release.2) - 2021-12-09 09:12:27
+
+# [1.2.0-beta-release.2](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.2.0-beta-release.1...v1.2.0-beta-release.2) (2021-12-09)
+
+
+### Features
+
+* **push:** update beta-release-version ([c43f769](https://github.com/DeloitteHux/hxp-cdm-airflow/commit/c43f76964b6f35e0419a37ef6cd55d1a36cae66b))
+
+
+
+
+
 ## [v1.2.0-beta-release.1](https://github.com/DeloitteHux/hxp-cdm-airflow/releases/tag/v1.2.0-beta-release.1) - 2021-12-09 07:12:13
 
 # [1.2.0-beta-release.1](https://github.com/DeloitteHux/hxp-cdm-airflow/compare/v1.2.0-2ndversion.1...v1.2.0-beta-release.1) (2021-12-09)
