@@ -1,6 +1,6 @@
 {
     "branches": [
-        "master", 
+        "sem-version-test", 
       { "name": "sem-version-test", "prerelease" : "sem" }
     ],
     "plugins": [
