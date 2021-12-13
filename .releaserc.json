@@ -1,13 +1,13 @@
 {
-  "branches": [
-      "master", 
-    { "name": "sem-version-test", "prerelease" : "sem" }
-  ],
-  "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/git",
-      "@semantic-release/github"
-  ]
-}
+    "branches": [
+        "master", 
+      { "name": "sem-version-test", "prerelease" : "sem" }
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        "@semantic-release/changelog",
+        "@semantic-release/git",
+        "@semantic-release/github"
+    ]
+  }

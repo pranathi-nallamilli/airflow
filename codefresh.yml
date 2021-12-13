@@ -62,4 +62,3 @@ steps:
       BUILD_NUMBER: '${{CF_BUILD_NUMBER}}'
       JFROG_REGISTRY: '${{JFROG_REGISTRY}}/cdm-Airflow'
       BUILD_TAG: '${{CF_BUILD_NUMBER}}'
-      
